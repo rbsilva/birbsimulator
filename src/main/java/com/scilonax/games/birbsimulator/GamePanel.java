@@ -15,6 +15,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     private int y = 0;
     private int FPS = 60;
     private long targetTime = 1000 / FPS;
+    private Image imageBackground = requestImage("/background.jpg");
+    private Image seagle = requestImage("/seagle.jpg");
 
     public Image requestImage(String s) {
         BufferedImage read = null;
@@ -44,8 +46,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         while (true) {
             start = System.nanoTime();
             final Graphics graphics = this.getGraphics();
-            graphics.drawImage(this.requestImage("/background.jpg"), 0, 0, 800, 400, null);
-            graphics.drawImage(requestImage("/seagle.jpg"), x, y, 200, 200, null);
+            graphics.drawImage(this.imageBackground, 0, 0, 800, 400, null);
+            graphics.drawImage(this.seagle, x, y, 200, 200, null);
 
             elapsed = System.nanoTime() - start;
             wait = targetTime - elapsed / 1000000;

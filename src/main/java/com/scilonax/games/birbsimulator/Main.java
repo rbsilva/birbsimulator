@@ -11,7 +11,6 @@ public class Main {
         birbWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         final GamePanel container = new GamePanel();
         container.setPreferredSize(new Dimension(800,400));
-        container.setBackground(Color.BLACK);
         container.setFocusable(true);
         container.requestFocusInWindow();
         birbWindow.setContentPane(container);
