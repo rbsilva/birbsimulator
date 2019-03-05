@@ -15,5 +15,6 @@ public class Main {
         container.requestFocusInWindow();
         birbWindow.setContentPane(container);
         birbWindow.setVisible(true);
+
     }
 }

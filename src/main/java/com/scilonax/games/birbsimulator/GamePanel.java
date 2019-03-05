@@ -1,41 +1,32 @@
 package com.scilonax.games.birbsimulator;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 
-public class GamePanel extends JPanel implements Runnable, KeyListener {
+public class GamePanel extends JPanel implements Runnable {
 
     private Thread thread;
     private int x = 0;
     private int y = 0;
     private int FPS = 60;
     private long targetTime = 1000 / FPS;
-    private Image imageBackground = requestImage("/background.jpg");
-    private Image seagle = requestImage("/seagle.jpg");
-
-    public Image requestImage(String s) {
-        BufferedImage read = null;
-        try {
-            read = ImageIO.read(getClass().getResourceAsStream(s));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return read;
-    }
+    private Image imageBackground = Util.requestImage("/background.jpg");
+    private Seagle seagle = new Seagle();
 
     @Override
     public void addNotify() {
         super.addNotify();
         if(thread == null) {
             thread = new Thread(this);
-            addKeyListener(this);
+            addKeyListener(new ControlManager(this));
             thread.start();
         }
+    }
+
+    public Seagle getSeagle() {
+        return seagle;
     }
 
     public void run() {
@@ -47,7 +38,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             start = System.nanoTime();
             final Graphics graphics = this.getGraphics();
             graphics.drawImage(this.imageBackground, 0, 0, 800, 400, null);
-            graphics.drawImage(this.seagle, x, y, 200, 200, null);
+            graphics.drawImage(this.seagle.getSeagle(), this.seagle.getX(), this.seagle.getY(), 200, 200, null);
 
             elapsed = System.nanoTime() - start;
             wait = targetTime - elapsed / 1000000;
@@ -62,29 +53,4 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         }
     }
 
-    public void keyTyped(KeyEvent keyEvent) {
-
-    }
-
-    public void keyPressed(KeyEvent keyEvent) {
-        if (keyEvent.getKeyChar() == 'w') {
-            this.y = this.y - 10;
-        }
-
-        if (keyEvent.getKeyChar() == 'd') {
-            this.x = this.x + 10;
-        }
-
-        if (keyEvent.getKeyChar() == 's') {
-            this.y = this.y + 10;
-        }
-
-        if (keyEvent.getKeyChar() == 'a') {
-            this.x = this.x - 10;
-        }
-    }
-
-    public void keyReleased(KeyEvent keyEvent) {
-
-    }
 }
