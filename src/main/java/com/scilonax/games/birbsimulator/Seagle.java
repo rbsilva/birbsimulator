@@ -2,45 +2,21 @@ package com.scilonax.games.birbsimulator;
 
 import java.awt.*;
 
-public class Seagle implements Handleable{
-
-
-    private int x;
-    private int y;
+public class Seagle extends Bird {
 
     private Image seagle = Util.requestImage("/seagle.jpg");
 
-
-    public Image getSeagle() {
-        return seagle;
+    public Seagle(Bird nextBird) {
+        super(nextBird);
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
+    public Seagle(Bird nextBird, int x, int y) {
+        super(nextBird);
         this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
         this.y = y;
     }
 
-    public void handle(HandleEvent event) {
-
-        if(HandleEvent.EventType.MOVE_UP.equals(event.getType())){
-            this.y -= 10;
-        } else if(HandleEvent.EventType.MOVE_DOWN.equals(event.getType())){
-            this.y += 10;
-        } else if(HandleEvent.EventType.MOVE_LEFT.equals(event.getType())){
-            this.x -= 10;
-        } else if(HandleEvent.EventType.MOVE_RIGHT.equals(event.getType())){
-            this.x += 10;
-        }
+    public Image getSeagle() {
+        return seagle;
     }
 }

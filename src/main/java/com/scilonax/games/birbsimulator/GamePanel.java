@@ -13,7 +13,8 @@ public class GamePanel extends JPanel implements Runnable {
     private int FPS = 60;
     private long targetTime = 1000 / FPS;
     private Image imageBackground = Util.requestImage("/background.jpg");
-    private Seagle seagle = new Seagle();
+    private Pidgeon pidgeon = new Pidgeon(null , 400 , 0);
+    private Seagle seagle = new Seagle(pidgeon);
 
     @Override
     public void addNotify() {
@@ -39,6 +40,7 @@ public class GamePanel extends JPanel implements Runnable {
             final Graphics graphics = this.getGraphics();
             graphics.drawImage(this.imageBackground, 0, 0, 800, 400, null);
             graphics.drawImage(this.seagle.getSeagle(), this.seagle.getX(), this.seagle.getY(), 200, 200, null);
+            graphics.drawImage(this.pidgeon.getSeagle(), this.pidgeon.getX(), this.pidgeon.getY(), 200, 200, null);
 
             elapsed = System.nanoTime() - start;
             wait = targetTime - elapsed / 1000000;
