@@ -2,8 +2,12 @@ package com.scilonax.games.birbsimulator;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -12,16 +16,19 @@ public class GamePanel extends JPanel implements Runnable {
     private int y = 0;
     private int FPS = 60;
     private long targetTime = 1000 / FPS;
+    public static  BlockingQueue<Event> blockingQueue = new ArrayBlockingQueue<>(5);
     private Image imageBackground = Util.requestImage("/background.jpg");
-    private Pidgeon pidgeon = new Pidgeon(null , 400 , 0);
-    private Seagle seagle = new Seagle(pidgeon);
+    private ArrayList<Character> playerOneControls = new ArrayList<>();
+    private ArrayList<Character> playerTwoControls = new ArrayList<>();
+    private Seagle seagle = new Seagle(0,0, 'w' , 's', 'd', 'a');
+    private Pidgeon pidgeon = new Pidgeon(400, 0 , 'i' , 'k' , 'l' , 'j');
+
 
     @Override
     public void addNotify() {
         super.addNotify();
         if(thread == null) {
             thread = new Thread(this);
-            addKeyListener(new ControlManager(this));
             thread.start();
         }
     }
@@ -30,10 +37,26 @@ public class GamePanel extends JPanel implements Runnable {
         return seagle;
     }
 
+    public Pidgeon getPidgeon() {
+        return pidgeon;
+    }
+
     public void run() {
         long start;
         long elapsed;
         long wait;
+
+        this.playerOneControls.addAll(Arrays.asList('w', 's', 'd', 'a'));
+        this.playerTwoControls.addAll(Arrays.asList('i', 'k', 'l', 'j'));
+        addKeyListener(new UserEventListener());
+
+        ExecutorService  executor = Executors.newFixedThreadPool(5);
+        executor.submit(new ControlManager(this, playerOneControls, playerTwoControls));
+
+        if(Window.getWindows().length == 0){
+            executor.shutdownNow();
+        }
+
 
         while (true) {
             start = System.nanoTime();

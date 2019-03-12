@@ -6,14 +6,8 @@ public class Seagle extends Bird {
 
     private Image seagle = Util.requestImage("/seagle.jpg");
 
-    public Seagle(Bird nextBird) {
-        super(nextBird);
-    }
-
-    public Seagle(Bird nextBird, int x, int y) {
-        super(nextBird);
-        this.x = x;
-        this.y = y;
+    public Seagle(int x, int y, Character moveUp, Character moveDown, Character moveRight, Character moveLeft) {
+        super(x, y, moveUp, moveDown, moveRight, moveLeft);
     }
 
     public Image getSeagle() {

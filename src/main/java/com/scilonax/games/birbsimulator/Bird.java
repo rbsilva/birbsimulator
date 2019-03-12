@@ -1,20 +1,25 @@
 package com.scilonax.games.birbsimulator;
 
-public abstract class Bird implements Handleable {
-    protected Bird nextBird;
+public abstract class Bird {
     protected int x;
     protected int y;
+    protected Character moveUp;
+    protected Character moveDown;
+    protected Character moveRight;
+    protected Character moveLeft;
 
-    public Bird(Bird nextBird) {
-        this.nextBird = nextBird;
+    public Bird(int x, int y, Character moveUp, Character moveDown, Character moveRight, Character moveLeft) {
+        this.x = x;
+        this.y = y;
+        this.moveUp = moveUp;
+        this.moveDown = moveDown;
+        this.moveRight = moveRight;
+        this.moveLeft = moveLeft;
     }
 
-    public Bird getNextBird() {
-        return nextBird;
-    }
-
-    public void setNextBird(Bird nextBird) {
-        this.nextBird = nextBird;
+    public Bird(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
     public int getX() {
@@ -33,20 +38,16 @@ public abstract class Bird implements Handleable {
         this.y = y;
     }
 
-    public void handle(HandleEvent event) {
+    public void handle(Character key) {
 
-        if(HandleEvent.EventType.MOVE_UP.equals(event.getType())){
+        if(key == moveUp){
             this.y -= 10;
-        } else if(HandleEvent.EventType.MOVE_DOWN.equals(event.getType())){
+        } else if(key == moveDown){
             this.y += 10;
-        } else if(HandleEvent.EventType.MOVE_LEFT.equals(event.getType())){
+        } else if(key  == moveLeft){
             this.x -= 10;
-        } else if(HandleEvent.EventType.MOVE_RIGHT.equals(event.getType())){
+        } else if(key == moveRight){
             this.x += 10;
-        }
-
-        if (this.nextBird != null) {
-            this.nextBird.handle(event);
         }
     }
 }
