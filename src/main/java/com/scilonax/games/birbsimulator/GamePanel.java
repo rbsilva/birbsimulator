@@ -4,12 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
-public class GamePanel extends JPanel implements Runnable {
+public class GamePanel extends JPanel implements Runnable{
 
     private Thread thread;
     private int x = 0;
@@ -47,11 +44,27 @@ public class GamePanel extends JPanel implements Runnable {
         long wait;
 
         this.playerOneControls.addAll(Arrays.asList('w', 's', 'd', 'a'));
-        this.playerTwoControls.addAll(Arrays.asList('i', 'k', 'l', 'j'));
         addKeyListener(new UserEventListener());
 
         ExecutorService  executor = Executors.newFixedThreadPool(5);
-        executor.submit(new ControlManager(this, playerOneControls, playerTwoControls));
+
+        ControlManager taskPlayerOne = new ControlManager(this, playerOneControls, playerTwoControls);
+        ControlManager taskPlayerTwo = new ControlManager(this, playerOneControls, playerTwoControls);
+
+        GameThreadFactory playersThreads = () -> {
+            ArrayList<Thread> threads = new ArrayList<>();
+            Thread playerOneThread = new Thread(new ControlManager(this, playerOneControls, playerTwoControls));
+            Thread playerTwoThread = new Thread(new ControlManager(this, playerOneControls, playerTwoControls));
+            playerOneThread.setName("PlayerOne");
+            playerTwoThread.setName("PlayerTwo");
+            threads.addAll(Arrays.asList(playerOneThread, playerTwoThread));
+            return threads;
+        };
+
+            ArrayList<Thread> threads = playersThreads.newThread();
+            threads.forEach(thread -> {
+                executor.submit(thread);
+            });
 
         if(Window.getWindows().length == 0){
             executor.shutdownNow();
